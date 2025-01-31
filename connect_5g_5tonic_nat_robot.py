@@ -2,6 +2,7 @@ import serial
 import subprocess
 import time
 import argparse
+import netifaces
 
 # Configuration
 SERIAL_PORT = '/dev/ttyUSB3'  # Replace with your port
@@ -9,6 +10,21 @@ BAUD_RATE = 9600             # Adjust based on your device
 DELAY = 2                    # Delay (in seconds) between commands
 MAX_RETRIES = 5              # Maximum number of retries for qmicli
 SUDO_PASSWORD = "netcom;"  # Replace with your actual sudo password
+
+def get_wwan0_ip():
+    """
+    Retrieves and prints the IP address assigned to wwan0.
+    """
+    try:
+        if "wwan0" in netifaces.interfaces():
+            addresses = netifaces.ifaddresses("wwan0")
+            if netifaces.AF_INET in addresses:
+                ip_address = addresses[netifaces.AF_INET][0]["addr"]
+                print(f"wwan0 IP Address: {ip_address}")
+                return ip_address
+    except Exception as e:
+        print(f"Error retrieving wwan0 IP: {e}")
+    return None
 
 def configure_raw_ip():
     """
@@ -104,7 +120,12 @@ def main():
             return
         
         execute_command("udhcpc -q -f -n -i wwan0")
-        
+
+        # Check and print the assigned IP
+        wwan0_ip = get_wwan0_ip()
+        if not wwan0_ip:
+            print("Warning: No IP assigned to wwan0.")
+                
         setup_nat_iptables(args.robot_ip, args.ports)
         print("5G connection established and NAT/IPTABLES configured successfully.")
     except Exception as e:
