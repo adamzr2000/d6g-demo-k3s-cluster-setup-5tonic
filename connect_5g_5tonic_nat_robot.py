@@ -48,17 +48,21 @@ def execute_command(command, retries=1):
     """
     for attempt in range(retries):
         try:
-            full_command = f"echo {SUDO_PASSWORD} | sudo -S sh -c '{command}'"
-            process = subprocess.run(full_command, shell=True, text=True, capture_output=True)
+            # Adjust command handling to avoid quoting issues
+            process = subprocess.run(
+                ["sudo", "sh", "-c", command],
+                text=True,
+                capture_output=True
+            )
             if process.returncode == 0:
                 print(f"Command executed successfully: {command}")
-                return True
+                return True  # Command succeeded
             else:
                 print(f"Attempt {attempt + 1}/{retries}: Error executing command: {command}\n{process.stderr}")
         except Exception as e:
             print(f"Exception occurred while executing command: {command}\n{e}")
-        time.sleep(DELAY)
-    return False
+        time.sleep(DELAY)  # Wait before retrying
+    return False  # All retries failed
 
 def send_at_command(command, serial_conn):
     """

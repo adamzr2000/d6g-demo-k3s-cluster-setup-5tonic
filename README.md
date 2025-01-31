@@ -11,13 +11,18 @@ Delete the K3s node named `robot`:
 ## 2. Rpi 5G HAT
 Connect to 5G network and set up NAT for the robot:
 ```bash
-python3 connect_5g_5tonic_nat_robot.py
+python3 connect_5g_5tonic_nat_robot.py --robot-ip 192.168.2.2
 ```
 
 ## 3. Robot (miniPC)
 Update the K3s agent service with the correct network interface and IP:
 ```bash
-sudo ./update_k3s_agent_service.sh --k3s-interface ue0 --k3s-ip 10.11.15.132
+./update_k3s_agent_service.sh --k3s-interface ue0 --k3s-ip 10.11.15.132
+```
+
+## Test
+```bash
+./ssh_k3s_cluster_config.sh --user netcom --host 10.11.15.X --flannel-interface ue0
 ```
 
 # Utility Commands

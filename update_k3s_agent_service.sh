@@ -37,13 +37,13 @@ sudo sed -i "s/--node-ip [^ ]*/--node-ip $K3S_IP/" "$K3S_SERVICE_FILE"
 sudo sed -i "s/--node-external-ip [^ ]*/--node-external-ip $K3S_IP/" "$K3S_SERVICE_FILE"
 sudo sed -i "s/--flannel-iface [^ ]*/--flannel-iface $K3S_INTERFACE/" "$K3S_SERVICE_FILE"
 
-# Annotate the node "robot" to overwrite the public IP used by Flannel
-kubectl annotate node robot flannel.alpha.coreos.com/public-ip-overwrite=$K3S_IP
-
 # Reload systemd and restart K3s
 echo "Reloading systemd and restarting K3s..."
 sudo systemctl daemon-reload
 sudo systemctl restart k3s-agent
+
+# Annotate the node "robot" to overwrite the public IP used by Flannel
+kubectl annotate node robot flannel.alpha.coreos.com/public-ip-overwrite=$K3S_IP
 
 # Confirm changes
 if [[ $? -eq 0 ]]; then
