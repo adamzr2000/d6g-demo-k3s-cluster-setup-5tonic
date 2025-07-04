@@ -113,8 +113,8 @@ def main():
 
         # Retry qmicli command up to MAX_RETRIES times
         qmicli_command = (
-            'qmicli -d /dev/cdc-wdm0 --device-open-net="net-raw-ip|net-no-qos-header" '
-            '--wds-start-network="apn=\'Internet\',ip-type=4" --client-no-release-cid'
+            f"qmicli -d /dev/cdc-wdm0 --device-open-net='net-raw-ip|net-no-qos-header' "
+            f"--wds-start-network=\"apn='{apn}',ip-type=4\" --client-no-release-cid"
         )
   
         if not execute_command(qmicli_command, retries=MAX_RETRIES):

@@ -93,8 +93,8 @@ def main():
     parser.add_argument("--robot-ip", required=True, help="IP address of the robot.")
     parser.add_argument("--ports", default="1:65535", help="Port range to forward (default: all ports).")
     parser.add_argument("--apn", type=str, default="Internet", help="Access Point Name (APN)")
-
     args = parser.parse_args()
+    apn = args.apn
     
     try:
         configure_raw_ip()
@@ -118,8 +118,8 @@ def main():
         time.sleep(DELAY)
         
         qmicli_command = (
-            'qmicli -d /dev/cdc-wdm0 --device-open-net="net-raw-ip|net-no-qos-header" '
-            '--wds-start-network="apn=\'Internet\',ip-type=4" --client-no-release-cid'
+            f"qmicli -d /dev/cdc-wdm0 --device-open-net='net-raw-ip|net-no-qos-header' "
+            f"--wds-start-network=\"apn='{apn}',ip-type=4\" --client-no-release-cid"
         )
         if not execute_command(qmicli_command, retries=MAX_RETRIES):
             print(f"Failed to execute qmicli command after {MAX_RETRIES} attempts.")
