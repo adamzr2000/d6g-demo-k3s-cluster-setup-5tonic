@@ -92,6 +92,8 @@ def main():
     parser = argparse.ArgumentParser(description="Connect to 5G and configure NAT/IPTABLES.")
     parser.add_argument("--robot-ip", required=True, help="IP address of the robot.")
     parser.add_argument("--ports", default="1:65535", help="Port range to forward (default: all ports).")
+    parser.add_argument("--apn", type=str, default="Internet", help="Access Point Name (APN)")
+
     args = parser.parse_args()
     
     try:
